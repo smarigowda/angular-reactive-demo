@@ -5,10 +5,10 @@ import {
   OnInit,
 } from '@angular/core';
 // import { fromEvent } from 'rxjs';
-import { switchMap, catchError } from 'rxjs/operators';
+import { switchMap, catchError, take } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { EMPTY } from 'rxjs';
+import { EMPTY, Observable, interval } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -19,6 +19,7 @@ import { EMPTY } from 'rxjs';
 export class AppComponent implements OnInit {
   weather = '';
   searchInput = new FormControl('');
+  numbers: Observable<number> = interval(1000).pipe(take(10));
   private baseWeatherURL = 'http://api.openweathermap.org/data/2.5/weather?q=';
   private urlSuffix = '&units=metric&appid=9a2a36f6759aaf58e682c8471ee07256';
   constructor(private http: HttpClient) {}
