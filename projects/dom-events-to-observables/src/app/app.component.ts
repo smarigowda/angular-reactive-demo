@@ -2,10 +2,13 @@ import {
   Component,
   AfterViewInit,
   ViewEncapsulation,
+  OnInit,
 } from '@angular/core';
 // import { fromEvent } from 'rxjs';
-import { debounceTime, map } from 'rxjs/operators';
+import { switchMap, catchError } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { EMPTY } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -13,15 +16,32 @@ import { FormControl } from '@angular/forms';
   styleUrls: ['./app.component.scss'],
   encapsulation: ViewEncapsulation.ShadowDom,
 })
-export class AppComponent implements AfterViewInit {
-  // title = 'dom-events-to-observables';
+export class AppComponent implements OnInit {
+  weather = '';
   searchInput = new FormControl('');
-  ngAfterViewInit() {
-    this.searchInput.valueChanges.pipe(debounceTime(500)).subscribe(stock => this.getStockQuoteFromServer(stock));
+  private baseWeatherURL = 'http://api.openweathermap.org/data/2.5/weather?q=';
+  private urlSuffix = '&units=metric&appid=9a2a36f6759aaf58e682c8471ee07256';
+  constructor(private http: HttpClient) {}
+  ngOnInit() {
+    this.searchInput.valueChanges
+      .pipe(switchMap((city) => this.getWeather(city)))
+      .subscribe(
+        (result) => {
+          this.weather = `Current Temperature: ${result['main'].temp} Celcius,
+          Humidity: ${result['main'].humidity} %`;
+          console.log(result);
+        },
+        (error) => console.log(`Error: can not get weather: ${error}`)
+      );
   }
-  getStockQuoteFromServer(stock: string) {
-    console.log('--- stock symbol entered is ---');
-    console.log(stock);
-    console.log(`The price of ${stock} is ${(100 * Math.random()).toFixed(4)}`);
+  getWeather(city: string) {
+    return this.http.get(this.baseWeatherURL + city + this.urlSuffix).pipe(
+      catchError((err) => {
+        if (err.status === 404) {
+          console.log(`City ${city} not found`);
+          return EMPTY;
+        }
+      })
+    );
   }
 }
