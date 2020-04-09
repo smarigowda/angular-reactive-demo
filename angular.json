@@ -2,5 +2,130 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "newProjectRoot": "projects",
-  "projects": {}
+  "projects": {
+    "dom-events-to-observables": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/dom-events-to-observables",
+      "sourceRoot": "projects/dom-events-to-observables/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/dom-events-to-observables",
+            "index": "projects/dom-events-to-observables/src/index.html",
+            "main": "projects/dom-events-to-observables/src/main.ts",
+            "polyfills": "projects/dom-events-to-observables/src/polyfills.ts",
+            "tsConfig": "projects/dom-events-to-observables/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "projects/dom-events-to-observables/src/favicon.ico",
+              "projects/dom-events-to-observables/src/assets"
+            ],
+            "styles": [
+              "projects/dom-events-to-observables/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/dom-events-to-observables/src/environments/environment.ts",
+                  "with": "projects/dom-events-to-observables/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "dom-events-to-observables:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "dom-events-to-observables:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "dom-events-to-observables:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/dom-events-to-observables/src/test.ts",
+            "polyfills": "projects/dom-events-to-observables/src/polyfills.ts",
+            "tsConfig": "projects/dom-events-to-observables/tsconfig.spec.json",
+            "karmaConfig": "projects/dom-events-to-observables/karma.conf.js",
+            "assets": [
+              "projects/dom-events-to-observables/src/favicon.ico",
+              "projects/dom-events-to-observables/src/assets"
+            ],
+            "styles": [
+              "projects/dom-events-to-observables/src/styles.scss"
+            ],
+            "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/dom-events-to-observables/tsconfig.app.json",
+              "projects/dom-events-to-observables/tsconfig.spec.json",
+              "projects/dom-events-to-observables/e2e/tsconfig.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/dom-events-to-observables/e2e/protractor.conf.js",
+            "devServerTarget": "dom-events-to-observables:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "dom-events-to-observables:serve:production"
+            }
+          }
+        }
+      }
+    }},
+  "cli": {
+    "analytics": "67995dab-ce93-4407-afa6-a1c820e8cba7"
+  },
+  "defaultProject": "dom-events-to-observables"
 }
