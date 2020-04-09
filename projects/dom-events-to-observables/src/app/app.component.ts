@@ -9,6 +9,7 @@ import { switchMap, catchError, take } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { EMPTY, Observable, interval } from 'rxjs';
+import { ProductService, Product } from './product.service';
 
 @Component({
   selector: 'app-root',
@@ -17,13 +18,16 @@ import { EMPTY, Observable, interval } from 'rxjs';
   encapsulation: ViewEncapsulation.ShadowDom,
 })
 export class AppComponent implements OnInit {
+  products: Observable<Product[]>;
   weather = '';
   searchInput = new FormControl('');
   numbers: Observable<number> = interval(1000).pipe(take(10));
   private baseWeatherURL = 'http://api.openweathermap.org/data/2.5/weather?q=';
   private urlSuffix = '&units=metric&appid=9a2a36f6759aaf58e682c8471ee07256';
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private productService: ProductService) {}
   ngOnInit() {
+    this.products = this.productService.getProducts();
+
     this.searchInput.valueChanges
       .pipe(switchMap((city) => this.getWeather(city)))
       .subscribe(
